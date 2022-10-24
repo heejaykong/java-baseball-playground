@@ -1,3 +1,44 @@
+# 숫자 야구 게임 구현(w/ 단위테스트)
+
+### 구현할 기능 목록
+* 게임이 시작하면 1에서 9까지 서로 다른 임의의 수 3개 발생시키키
+* 게임이 종료할 때까지 사용자의 입력을 반복해서 받기
+  * `숫자를 입력해 주세요 :` 출력
+  * 예외처리)
+    * `1234`, `012`, `12 3`, `1k3`, `메롱` 등 규칙에  어긋나는 입력은 `잘못 입력하셨습니다.` 출력
+* 입력한 숫자에 따라 힌트 메시지를 출력하기
+  * 같은 수가 같은 자리에 있을 경우: `스트라이크` 출력
+  * 같은 수가 다른 자리에 있을 경우: `볼` 출력
+  * 같은 수가 전혀 없을 경우: `낫싱` 출력
+  * e.g.)
+    * `n볼`
+    * `n스트라이크`
+    * `n볼 m스트라이크`
+    * `낫싱`
+* 컴퓨터가 발생시킨 임의의 수를 사용자가 맞추면 게임 종료
+  * `3개의 숫자를 모두 맞히셨습니다! 게임 종료` 출력
+  * `게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.` 출력
+  * 사용자가 1을 입력하면 게임 재개하기
+  * 사용자가 2를 입력하면 게임 완전히 종료하기
+    * 예외처리)
+      * 1이나 2가 아닌 입력은 `잘못 입력하셨습니다.` 출력
+
+### 커밋 메시지 컨벤션
+본 프로젝트는 커밋 메시지를 다음과 같이 구분해 작성합니다. (참고 자료: [AngularJS Commit Message Conventions](https://gist.github.com/stephenparish/9941e89d80e2bc58a153))
+```
+feat (feature)
+fix (bug fix)
+docs (documentation)
+style (formatting, missing semi colons, …)
+refactor
+test (when adding missing tests)
+chore (maintain)
+```
+
+---
+
+(이하 튜토리얼 문서)
+
 ## [NEXTSTEP 플레이그라운드의 미션 진행 과정](https://github.com/next-step/nextstep-docs/blob/master/playground/README.md)
 
 ---
