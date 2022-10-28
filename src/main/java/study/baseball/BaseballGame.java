@@ -8,8 +8,8 @@ public class BaseballGame {
     static final int MIN = 1;
     static final int MAX = 9;
     static final int DIGITS_COUNT = 3;
-
-    static Scanner scanner = new Scanner(System.in);
+    static final String RESTART = "1";
+    static final String QUIT = "2";
 
     static ArrayList<Integer> correctAnswer = null;
 
@@ -54,26 +54,25 @@ public class BaseballGame {
         return parsedList;
     }
 
-    static ArrayList<Integer> validate(Scanner scanner, InputView inputView, ResultView resultView) {
-        String userInput = scanner.nextLine().trim();
+    static ArrayList<Integer> validate(String userInput, InputView inputView, ResultView resultView) {
 //        1. 크기가 3이 아닌 경우
         if (userInput.length() != DIGITS_COUNT) {
             resultView.rejectAnswer();
-            inputView.askQuestion();
-            return validate(scanner, inputView, resultView);
+            userInput = inputView.askDigits();
+            return validate(userInput, inputView, resultView);
         }
 //        2. 숫자가 아닌게 하나라도 있을 경우
         if (!isNumeric(userInput)) {
             resultView.rejectAnswer();
-            inputView.askQuestion();
-            return validate(scanner, inputView, resultView);
+            userInput = inputView.askDigits();
+            return validate(userInput, inputView, resultView);
         }
 //        3. 범위를 벗어난 숫자가 있을 경우
         ArrayList<Integer> parsedUserInput = parseUserInput(userInput);
         if (!isInRange(parsedUserInput, MIN, MAX)) {
             resultView.rejectAnswer();
-            inputView.askQuestion();
-            return validate(scanner, inputView, resultView);
+            userInput = inputView.askDigits();
+            return validate(userInput, inputView, resultView);
         }
         return parsedUserInput;
     }
@@ -101,9 +100,21 @@ public class BaseballGame {
         resultView.printHint(strikeCount, ballCount);
     }
 
-    static boolean checkIfCorrect(ArrayList<Integer> answer, ArrayList<Integer> guess, InputView inputView, ResultView resultView) {
+    static boolean guessTheAnswer(ArrayList<Integer> answer, ArrayList<Integer> guess, InputView inputView, ResultView resultView) {
         if (!guess.equals(answer)) {
             giveSomeHint(answer, guess, resultView);
+            return false;
+        }
+        resultView.printSuccessMsg();
+        String restartInput = inputView.askToRestart();
+
+        while (!restartInput.equals(RESTART) && !restartInput.equals(QUIT)) {
+            resultView.rejectAnswer();
+            restartInput = inputView.askToRestart();
+        }
+
+        if (restartInput.equals(RESTART)) {
+            correctAnswer = generateAnswer();
             return false;
         }
         return true;
@@ -119,13 +130,12 @@ public class BaseballGame {
 //        2. 사용자가 맞출때까지 반복: "숫자를 입력해 주세요 : " 출력
         boolean isGameOver = false;
         while (!isGameOver) {
-            inputView.askQuestion();
+            String userInput = inputView.askDigits();
 
 //        3. 입력한 숫자에 따라 힌트 메시지 출력하기: "스트라이크" "볼" "낫싱" 출력
-            ArrayList<Integer> validUserInput = validate(scanner, inputView, resultView);
+            ArrayList<Integer> validUserInput = validate(userInput, inputView, resultView);
 
-            boolean isChoseToFinishGame = checkIfCorrect(correctAnswer, validUserInput, inputView, resultView);
-            isGameOver = isChoseToFinishGame;
+            isGameOver = guessTheAnswer(correctAnswer, validUserInput, inputView, resultView);
         }
     }
 
