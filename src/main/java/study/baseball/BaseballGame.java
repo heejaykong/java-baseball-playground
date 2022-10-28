@@ -11,6 +11,8 @@ public class BaseballGame {
 
     static Scanner scanner = new Scanner(System.in);
 
+    static ArrayList<Integer> correctAnswer = null;
+
     static int getRandomDigit(int min, int max) {
         Random random = new Random();
         int randomDigit = random.nextInt(max - min + 1) + min;
@@ -76,25 +78,55 @@ public class BaseballGame {
         return parsedUserInput;
     }
 
+    static void giveSomeHint(ArrayList<Integer> answer, ArrayList<Integer> guess, ResultView resultView) {
+        int strikeCount = 0;
+        int ballCount = 0;
+
+        for (int i = 0; i < DIGITS_COUNT; i++) {
+            int currentGuess = guess.get(i);
+            int currentAnswer = answer.get(i);
+
+//      같은 수가 같은 자리에 있을 경우: 스트라이크 출력
+            if (currentGuess == currentAnswer) {
+                strikeCount += 1;
+                continue;
+            }
+//      같은 수가 다른 자리에 있을 경우: 볼 출력
+            if (answer.contains(currentGuess)) {
+                ballCount += 1;
+            }
+        }
+
+//      같은 수가 전혀 없을 경우: 낫싱 출력
+        resultView.printHint(strikeCount, ballCount);
+    }
+
+    static boolean checkIfCorrect(ArrayList<Integer> answer, ArrayList<Integer> guess, InputView inputView, ResultView resultView) {
+        if (!guess.equals(answer)) {
+            giveSomeHint(answer, guess, resultView);
+            return false;
+        }
+        return true;
+    }
+
     static void start() {
         InputView inputView = new InputView();
         ResultView resultView = new ResultView();
 
 //        1. 1~9 사이의 서로 다른 임의의 수 3개 발생시키기
-        ArrayList<Integer> correctAnswer = generateAnswer();
+        correctAnswer = generateAnswer();
 
 //        2. 사용자가 맞출때까지 반복: "숫자를 입력해 주세요 : " 출력
         boolean isGameOver = false;
         while (!isGameOver) {
             inputView.askQuestion();
 
+//        3. 입력한 숫자에 따라 힌트 메시지 출력하기: "스트라이크" "볼" "낫싱" 출력
             ArrayList<Integer> validUserInput = validate(scanner, inputView, resultView);
 
-            boolean isAnswer = correctAnswer.equals(validUserInput);
-            isGameOver = isAnswer;
+            boolean isChoseToFinishGame = checkIfCorrect(correctAnswer, validUserInput, inputView, resultView);
+            isGameOver = isChoseToFinishGame;
         }
-//        4. 입력한 숫자에 따라 힌트 메시지 출력하기
-//        5. "스트라이크" "볼" "낫싱"
     }
 
     public static void main(String[] args) {
