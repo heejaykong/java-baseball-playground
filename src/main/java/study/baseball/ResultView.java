@@ -1,6 +1,7 @@
 package study.baseball;
 
 public class ResultView {
+
     final String STRIKE = "스트라이크";
     final String BALL = "볼";
     final String NOTHING = "낫싱";
@@ -18,12 +19,12 @@ public class ResultView {
         }
 
         if (ballCount > 0 && strikeCount > 0) {
-            System.out.println(ballCount + " " + BALL + " " + strikeCount + " " +  STRIKE);
+            System.out.println(ballCount + " " + BALL + " " + strikeCount + " " + STRIKE);
             return;
         }
 
         if (ballCount > 0) {
-            System.out.println(ballCount + " " +  BALL);
+            System.out.println(ballCount + " " + BALL);
             return;
         }
 
