@@ -6,21 +6,21 @@ import java.util.stream.Collectors;
 
 public class BaseballGame {
 
-    static final int MIN = 1;
-    static final int MAX = 9;
-    static final int DIGITS_COUNT = 3;
-    static final String RESTART = "1";
-    static final String QUIT = "2";
+    final int MIN = 1;
+    final int MAX = 9;
+    final int DIGITS_COUNT = 3;
+    final String RESTART = "1";
+    final String QUIT = "2";
 
-    static ArrayList<Integer> correctAnswer = null;
+    ArrayList<Integer> correctAnswer = null;
 
-    static int getRandomDigit(int min, int max) {
+    int getRandomDigit(int min, int max) {
         Random random = new Random();
         int randomDigit = random.nextInt(max - min + 1) + min;
         return randomDigit;
     }
 
-    static ArrayList<Integer> generateAnswer() {
+    ArrayList<Integer> generateAnswer() {
         Set<Integer> answer = new HashSet<>();
         while (answer.size() < DIGITS_COUNT) {
             int randomDigit = getRandomDigit(MIN, MAX);
@@ -29,7 +29,7 @@ public class BaseballGame {
         return new ArrayList<>(answer);
     }
 
-    static boolean isNumeric(String userInput) {
+    boolean isNumeric(String userInput) {
         try {
             Integer.parseInt(userInput);
             return true;
@@ -38,7 +38,7 @@ public class BaseballGame {
         }
     }
 
-    static boolean isInRange(ArrayList<Integer> list, int min, int max) {
+    boolean isInRange(ArrayList<Integer> list, int min, int max) {
         for (int digit : list) {
             if (digit < min || max < digit) {
                 return false;
@@ -47,7 +47,7 @@ public class BaseballGame {
         return true;
     }
 
-    static ArrayList<Integer> parseUserInput(String userInput) {
+    ArrayList<Integer> parseUserInput(String userInput) {
         List<String> stringList = new ArrayList<>(Arrays.asList(userInput.split("")));
         ArrayList<Integer> parsedList = stringList.stream()
             .map(item -> Integer.parseInt(item))
@@ -55,7 +55,7 @@ public class BaseballGame {
         return parsedList;
     }
 
-    static ArrayList<Integer> validate(String userInput, InputView inputView,
+    ArrayList<Integer> validate(String userInput, InputView inputView,
         ResultView resultView) {
         // 1. 크기가 3이 아닌 경우
         if (userInput.length() != DIGITS_COUNT) {
@@ -79,7 +79,7 @@ public class BaseballGame {
         return parsedUserInput;
     }
 
-    static void giveSomeHint(ArrayList<Integer> answer, ArrayList<Integer> guess,
+    void giveSomeHint(ArrayList<Integer> answer, ArrayList<Integer> guess,
         ResultView resultView) {
         int strikeCount = 0;
         int ballCount = 0;
@@ -101,13 +101,13 @@ public class BaseballGame {
         resultView.printHint(strikeCount, ballCount);
     }
 
-    static boolean guessTheAnswer(ArrayList<Integer> answer, ArrayList<Integer> guess,
+    boolean guessTheAnswer(ArrayList<Integer> answer, ArrayList<Integer> guess,
         InputView inputView, ResultView resultView) {
         if (!guess.equals(answer)) {
             giveSomeHint(answer, guess, resultView);
             return false;
         }
-        resultView.printSuccessMsg();
+        resultView.printSuccessMsg(DIGITS_COUNT);
         String restartInput = inputView.askToRestart();
 
         while (!restartInput.equals(RESTART) && !restartInput.equals(QUIT)) {
@@ -122,7 +122,7 @@ public class BaseballGame {
         return true;
     }
 
-    static void start() {
+    void start() {
         InputView inputView = new InputView();
         ResultView resultView = new ResultView();
 
@@ -138,9 +138,5 @@ public class BaseballGame {
             ArrayList<Integer> validUserInput = validate(userInput, inputView, resultView);
             isGameOver = guessTheAnswer(correctAnswer, validUserInput, inputView, resultView);
         }
-    }
-
-    public static void main(String[] args) {
-        start();
     }
 }

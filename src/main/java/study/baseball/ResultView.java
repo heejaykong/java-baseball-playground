@@ -31,8 +31,8 @@ public class ResultView {
         System.out.println(strikeCount + " " + STRIKE);
     }
 
-    void printSuccessMsg() {
-        System.out.println(BaseballGame.DIGITS_COUNT + " " + STRIKE);
+    void printSuccessMsg(int digitsCount) {
+        System.out.println(digitsCount + " " + STRIKE);
         System.out.println(SUCCESS_MSG);
     }
 }
