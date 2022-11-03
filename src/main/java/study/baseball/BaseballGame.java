@@ -38,7 +38,8 @@ public class BaseballGame {
         }
     }
 
-    boolean isInRange(ArrayList<Integer> list, int min, int max) {
+    boolean isInRange(String userInput, int min, int max) {
+        ArrayList<Integer> list = parseUserInput(userInput);
         for (int digit : list) {
             if (digit < min || max < digit) {
                 return false;
@@ -55,32 +56,24 @@ public class BaseballGame {
         return parsedList;
     }
 
-    ArrayList<Integer> validate(String userInput, InputView inputView,
-        ResultView resultView) {
+    boolean isSizeCorrect(String userInput) {
+        return userInput.length() == DIGITS_COUNT;
+    }
+
+    ArrayList<Integer> validate(String userInput, InputView inputView, ResultView resultView) {
         // 1. 크기가 3이 아닌 경우
-        if (userInput.length() != DIGITS_COUNT) {
-            resultView.rejectAnswer();
-            userInput = inputView.askDigits();
-            return validate(userInput, inputView, resultView);
-        }
         // 2. 숫자가 아닌게 하나라도 있을 경우
-        if (!isNumeric(userInput)) {
-            resultView.rejectAnswer();
-            userInput = inputView.askDigits();
-            return validate(userInput, inputView, resultView);
-        }
         // 3. 범위를 벗어난 숫자가 있을 경우
-        ArrayList<Integer> parsedUserInput = parseUserInput(userInput);
-        if (!isInRange(parsedUserInput, MIN, MAX)) {
+        if (!isSizeCorrect(userInput) || !isNumeric(userInput) || !isInRange(userInput, MIN, MAX)) {
             resultView.rejectAnswer();
             userInput = inputView.askDigits();
             return validate(userInput, inputView, resultView);
         }
+        ArrayList<Integer> parsedUserInput = parseUserInput(userInput);
         return parsedUserInput;
     }
 
-    void giveSomeHint(ArrayList<Integer> answer, ArrayList<Integer> guess,
-        ResultView resultView) {
+    void giveSomeHint(ArrayList<Integer> answer, ArrayList<Integer> guess, ResultView resultView) {
         int strikeCount = 0;
         int ballCount = 0;
 
@@ -101,8 +94,8 @@ public class BaseballGame {
         resultView.printHint(strikeCount, ballCount);
     }
 
-    boolean guessTheAnswer(ArrayList<Integer> answer, ArrayList<Integer> guess,
-        InputView inputView, ResultView resultView) {
+    boolean guessTheAnswer(ArrayList<Integer> answer, ArrayList<Integer> guess, InputView inputView,
+        ResultView resultView) {
         if (!guess.equals(answer)) {
             giveSomeHint(answer, guess, resultView);
             return false;
